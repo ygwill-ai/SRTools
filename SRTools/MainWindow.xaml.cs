@@ -62,6 +62,9 @@ namespace SRTools
         private AppWindow appWindow = null;
         private AppWindowTitleBar titleBar;
         string ExpectionFileName;
+
+        public static bool isWindowOpen = true;
+
         public ImageBrush BackgroundBrush => Background;
 
         private const int GWL_STYLE = -16;
@@ -798,6 +801,7 @@ namespace SRTools
             NotificationManager.OnNotificationRequested -= AddNotification;
             WaitOverlayManager.OnWaitOverlayRequested -= ShowWaitOverlay;
             DialogManager.OnDialogRequested -= ShowDialog;
+            isWindowOpen = false;
         }
 
     }

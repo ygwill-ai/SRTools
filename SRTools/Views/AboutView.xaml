@@ -170,6 +170,10 @@
                             <Button x:Name="debug_WaitOverlayManager" Click="Debug_WaitOverlayManager_Test" Content="全局等待测试"/>
                             <Button x:Name="debug_ShowDialogTest" Click="Debug_ShowDialog_Test" Content="全局Dialog测试"/>
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button x:Name="debug_GeneralBtn" Click="Debug_GeneralTest" Content="通用测试按钮"/>
+                            <Button x:Name="debug_GeneralBtn_2" Click="Debug_GeneralTest_2" Content="通用测试按钮2"/>
+                        </StackPanel>
                         <TextBlock x:Name="debug_Message" Text="处于Debug模式，控制台无法关闭"/>
                     </StackPanel>
                 </StackPanel>

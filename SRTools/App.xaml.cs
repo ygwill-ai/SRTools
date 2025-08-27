@@ -40,6 +40,7 @@ namespace SRTools
 
         public static MainWindow MainWindow { get; private set; }
         public static ApplicationTheme CurrentTheme { get; private set; }
+        public static bool GDebugMode { get; set; }
         public static bool SDebugMode { get; set; }
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -76,14 +77,33 @@ namespace SRTools
             }
             else
             {
-                SetLanguage("en-US");
-                InitializeComponent();
                 Init();
+                // 检查命令行参数
+                string[] args = Environment.GetCommandLineArgs();
+                if (args.Length > 1)
+                {
+                    HandleCommandLineArgs(args);
+                    return;
+                }
+                InitializeComponent();
                 InitAppData();
                 SetupTheme();
                 InitAdminMode();
+                OnLaunched();
             }
+        }
 
+        private void HandleCommandLineArgs(string[] args)
+        {
+            foreach (var arg in args)
+            {
+                if (arg.StartsWith("srtools://", StringComparison.OrdinalIgnoreCase))
+                {
+                    Uri uri = new Uri(arg);
+                    Logging.WriteCustom("URL", arg);
+                    UrlHelper.HandleUriActivation(uri);
+                }
+            }
         }
 
         private void BringExistingInstanceToForeground()
@@ -104,28 +124,14 @@ namespace SRTools
             }
         }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs args)
+        private async void OnLaunched()
         {
             if (AppDataController.GetTerminalMode() == -1 || AppDataController.GetTerminalMode() == 0)
             {
                 MainWindow = new MainWindow();
                 MainWindow.Activate();
-
-                // 获取当前语言环境
-                string language = ResourceManager.Current.DefaultContext.QualifierValues["Language"];
-                Debug.WriteLine($"当前语言: {language}");
             }
             else await InitTerminalModeAsync(AppDataController.GetTerminalMode());
-        }
-
-        public static void SetLanguage(string language)
-        {
-            var context = ResourceContext.GetForViewIndependentUse();
-            context.Reset();
-            var languages = new List<string> { language };
-            context.Languages = languages;
-
-            ResourceManager.Current.DefaultContext.QualifierValues["Language"] = language;
         }
 
         private void InitAppData()
@@ -182,14 +188,17 @@ namespace SRTools
         public void Init()
         {
             AllocConsole();
+            Console.Title = "𝑺𝑹𝑻𝒐𝒐𝒍𝒔 𝑪𝒐𝒏𝒔𝒐𝒍𝒆";
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.UTF8;
             Console.SetWindowSize(60, 25);
             Console.SetBufferSize(60, 25);
             TerminalMode.HideConsole();
             bool isDebug = false;
+            GDebugMode = false;
 #if DEBUG
             isDebug = true;
+            GDebugMode = true;
 #else
 #endif
 
@@ -216,16 +225,6 @@ namespace SRTools
                         TerminalMode.HideConsole();
                         break;
                 }
-            }
-
-            if (isDebug)
-            {
-                Console.Title = "𝐃𝐞𝐛𝐮𝐠𝐌𝐨𝐝𝐞:SRTools";
-                TerminalMode.ShowConsole();
-            }
-            else
-            {
-                Console.Title = "𝐍𝐨𝐫𝐦𝐚𝐥𝐌𝐨𝐝𝐞:SRTools";
             }
 
             if (AppDataController.GetTerminalMode() != -1)

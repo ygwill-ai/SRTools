@@ -100,7 +100,7 @@ namespace SRTools.Depend
 
                         foreach (string line in lines)
                         {
-                            if (line.Trim() == "[General]")
+                            if (line.Trim() == "[General]" || line.Trim() == "[general]")
                             {
                                 inGeneralSection = true;
                             }

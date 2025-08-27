@@ -341,9 +341,9 @@ namespace SRTools.Views.ToolViews
             }
         }
 
-        private async void ExportUIGF_Click(object sender, RoutedEventArgs e)
+        private void ExportUIGF_Click(object sender, RoutedEventArgs e)
         {
-            DialogManager.RaiseDialog(XamlRoot, "导出记录", "目前导出记录仅支持UIGF4.0\nUIGF4.0目前为实验性支持\n不保证未来正式版可以正常导入", true, "仍要导出", ExportUIGF_Run);
+            ExportUIGF_Run();
         }
 
         private async void ExportUIGF_Run()
@@ -352,10 +352,10 @@ namespace SRTools.Views.ToolViews
             DateTime now = DateTime.Now;
             string formattedDate = now.ToString("yyyy_MM_dd_HH_mm_ss");
 
-            var suggestFileName = $"SRTools_Gacha_Export_{selectedUid}_{formattedDate}_UIGF4";
+            var suggestFileName = $"SRTools_Gacha_Export_{selectedUid}_{formattedDate}_UIGF4.1";
             var fileTypeChoices = new Dictionary<string, List<string>>
             {
-                { "Uniformed Interchangeable GachaLog Format standard v4.0", new List<string> { ".json" } }
+                { "Uniformed Interchangeable GachaLog Format standard v4.1", new List<string> { ".json" } }
             };
             var defaultExtension = ".json";
 
@@ -368,7 +368,7 @@ namespace SRTools.Views.ToolViews
 
         private async void ImportUIGF_Click(object sender, RoutedEventArgs e)
         {
-            DialogManager.RaiseDialog(XamlRoot, "导入记录", "目前导入记录支持UIGF4.0及SRGF1.0\nUIGF4.0目前为实验性支持", true, "选择文件", ImportUIGF_Run);
+            DialogManager.RaiseDialog(XamlRoot, "导入记录", "目前导入记录支持UIGF4.0/4.1及SRGF1.0", true, "选择文件", ImportUIGF_Run);
         }
 
         private async void ImportUIGF_Run()
@@ -560,7 +560,7 @@ namespace SRTools.Views.ToolViews
                     dispatcherTimer.Stop();
                     Logging.Write("Loading Gacha Data...", 0);
                     await GachaRecords.GetGachaAsync(GachaLink_String);
-                    NotificationManager.RaiseNotification("获取跃迁记录完成", "", InfoBarSeverity.Success, true, 2);
+                    NotificationManager.RaiseNotification("获取跃迁记录完成\n跃迁URL已复制到剪贴板", "", InfoBarSeverity.Success, true, 2);
                     GachaLink_String = null;
                     WaitOverlayManager.RaiseWaitOverlay(false);
                     ProxyButton.IsEnabled = true;
@@ -573,11 +573,10 @@ namespace SRTools.Views.ToolViews
             }
         }
 
-
         public async void CreateCapture_Click(object sender, RoutedEventArgs e)
         {
             // 创建对话框内容
-            var content = new StackPanel { Spacing = 4 }; // 设置 StackPanel 的 Spacing 为 4
+            var content = new StackPanel { Spacing = 4 };
 
             var checkBoxScreenShotSelf = new CheckBox { Content = "是否自动截图", IsChecked = true };
             var checkBoxShowRecords = new CheckBox { Content = "是否显示跃迁记录", IsChecked = true };
@@ -851,8 +850,10 @@ namespace SRTools.Views.ToolViews
             {
                 var id when id == cardPoolInfo.CardPoolIds.GetValueOrDefault("11", -1) => 1,
                 var id when id == cardPoolInfo.CardPoolIds.GetValueOrDefault("12", -1) => 2,
-                var id when id == cardPoolInfo.CardPoolIds.GetValueOrDefault("2", -1) => 3,
-                var id when id == cardPoolInfo.CardPoolIds.GetValueOrDefault("1", -1) => 4,
+                var id when id == cardPoolInfo.CardPoolIds.GetValueOrDefault("21", -1) => 3,
+                var id when id == cardPoolInfo.CardPoolIds.GetValueOrDefault("22", -1) => 4,
+                var id when id == cardPoolInfo.CardPoolIds.GetValueOrDefault("2", -1) => 5,
+                var id when id == cardPoolInfo.CardPoolIds.GetValueOrDefault("1", -1) => 6,
                 _ => 100 // 默认排序顺序
             };
         }

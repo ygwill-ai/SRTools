@@ -43,16 +43,18 @@ namespace SRTools.Depend
 
             var charRecords = await GetAllGachaRecordsAsync(url, "11");
             var lightRecords = await GetAllGachaRecordsAsync(url, "12");
+            var charcollaborationRecords = await GetAllGachaRecordsAsync(url, "21");
+            var lightcollaborationRecords = await GetAllGachaRecordsAsync(url, "22");
             var newbieRecords = await GetAllGachaRecordsAsync(url, "2");
             var regularRecords = await GetAllGachaRecordsAsync(url, "1");
 
-            if (charRecords.Count == 0 && lightRecords.Count == 0 && newbieRecords.Count == 0 && regularRecords.Count == 0)
+            if (charcollaborationRecords.Count == 0 && lightcollaborationRecords.Count == 0 && charRecords.Count == 0 && lightRecords.Count == 0 && newbieRecords.Count == 0 && regularRecords.Count == 0)
             {
                 Logging.Write("未能获取任何跃迁记录，请检查链接或重试", 1);
                 return;
             }
 
-            string uid = charRecords.FirstOrDefault()?.Uid ?? lightRecords.FirstOrDefault()?.Uid ?? newbieRecords.FirstOrDefault()?.Uid ?? regularRecords.FirstOrDefault()?.Uid;
+            string uid = charcollaborationRecords.FirstOrDefault()?.Uid ?? lightcollaborationRecords.FirstOrDefault()?.Uid ?? charRecords.FirstOrDefault()?.Uid ?? lightRecords.FirstOrDefault()?.Uid ?? newbieRecords.FirstOrDefault()?.Uid ?? regularRecords.FirstOrDefault()?.Uid;
 
             if (string.IsNullOrEmpty(uid) || uid.Length != 9)
             {
@@ -80,8 +82,24 @@ namespace SRTools.Depend
 
             MergeRecords(existingData, charRecords, 11);
             MergeRecords(existingData, lightRecords, 12);
+            MergeRecords(existingData, charcollaborationRecords, 21);
+            MergeRecords(existingData, lightcollaborationRecords, 22);
             MergeRecords(existingData, newbieRecords, 2);
             MergeRecords(existingData, regularRecords, 1);
+
+            var sortOrder = new Dictionary<int, int>
+            {
+                { 11, 0 },
+                { 12, 1 },
+                { 21, 2 },
+                { 22, 3 },
+                { 2, 4 },
+                { 1, 5 }
+            };
+
+            existingData.list = existingData.list
+                .OrderBy(p => sortOrder.ContainsKey(p.cardPoolId) ? sortOrder[p.cardPoolId] : int.MaxValue)
+                .ToList();
 
             foreach (var pool in existingData.list)
             {
@@ -166,14 +184,21 @@ namespace SRTools.Depend
             {
                 11 => "角色活动跃迁",
                 12 => "光锥活动跃迁",
+                21 => "角色联动跃迁",
+                22 => "光锥联动跃迁",
                 2 => "新手跃迁",
                 1 => "群星跃迁",
-                _ => "未知频段"
+                _ => "未知跃迁"
             };
         }
 
         public async static Task<List<GachaRecords>> GetAllGachaRecordsAsync(string url, string gachaType)
         {
+            if (gachaType == "21" || gachaType == "22")
+            {
+                url = url.Replace("getGachaLog?", "getLdGachaLog?");
+            }
+
             var client = new HttpClient();
             var records = new List<GachaRecords>();
             var count = 0;

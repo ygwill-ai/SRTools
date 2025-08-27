@@ -330,7 +330,7 @@ namespace SRTools.Depend
             public long export_timestamp { get; set; }
             public string export_app { get; set; }
             public string export_app_version { get; set; }
-            public string version { get; set; } = "v4.0";
+            public string version { get; set; } = "v4.1";
         }
 
         public class ExportUser
@@ -362,7 +362,7 @@ namespace SRTools.Depend
                     export_timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                     export_app = "SRTools",
                     export_app_version = currentVersion,
-                    version = "v4.0"
+                    version = "v4.1"
                 },
                 hkrpg = new List<ExportUser>
             {
@@ -422,8 +422,10 @@ namespace SRTools.Depend
             {
                 var id when id == cardPoolInfo.CardPoolIds["11"] => 1,
                 var id when id == cardPoolInfo.CardPoolIds["12"] => 2,
-                var id when id == cardPoolInfo.CardPoolIds["2"] => 3,
-                var id when id == cardPoolInfo.CardPoolIds["1"] => 4,
+                var id when id == cardPoolInfo.CardPoolIds["21"] => 3,
+                var id when id == cardPoolInfo.CardPoolIds["22"] => 4,
+                var id when id == cardPoolInfo.CardPoolIds["2"] => 5,
+                var id when id == cardPoolInfo.CardPoolIds["1"] => 6,
                 _ => 5
             };
         }

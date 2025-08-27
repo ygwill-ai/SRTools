@@ -103,6 +103,7 @@ namespace SRTools.Depend
         public static int GetConsoleMode() => GetValue("Config_ConsoleMode", -1);
         public static int GetTerminalMode() => GetValue("Config_TerminalMode", -1);
         public static int GetAdminMode() => GetValue("Config_AdminMode", -1);
+        public static string GetGameParameter() => GetValue("Config_GameParameter", "");
 
         public static void SetAutoCheckUpdate(int autocheckupdate) => SetValue("Config_AutoCheckUpdate", autocheckupdate);
         public static void SetFirstRunStatus(int firstRunStatus) => SetValue("Config_FirstRunStatus", firstRunStatus);
@@ -113,6 +114,7 @@ namespace SRTools.Depend
         public static void SetConsoleMode(int consoleMode) => SetValue("Config_ConsoleMode", consoleMode);
         public static void SetTerminalMode(int terminalMode) => SetValue("Config_TerminalMode", terminalMode);
         public static void SetAdminMode(int adminMode) => SetValue("Config_AdminMode", adminMode);
+        public static void SetGameParameter(string gamePath) => SetValue("Config_GameParameter", gamePath);
 
         public static void RMAutoCheckUpdate() => RemoveValue("Config_AutoCheckUpdate");
         public static void RMFirstRunStatus() => RemoveValue("Config_FirstRunStatus");
@@ -123,6 +125,7 @@ namespace SRTools.Depend
         public static void RMConsoleMode() => RemoveValue("Config_ConsoleMode");
         public static void RMTerminalMode() => RemoveValue("Config_TerminalMode");
         public static void RMAdminMode() => RemoveValue("Config_AdminMode");
+        public static void RMGameParameter() => RemoveValue("Config_GameParameter");
 
     }
 }

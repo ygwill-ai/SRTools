@@ -274,6 +274,16 @@ namespace SRTools.Views
             });
         }
 
+        public void AdvancedSettings(object sender, RoutedEventArgs e)
+        {
+            StackPanel advancedPanel = new StackPanel();
+            advancedPanel.Children.Add(new TextBlock { Text = "游戏启动参数" });
+            TextBox gameArgs = new TextBox();
+            gameArgs.Text = AppDataController.GetGameParameter();
+            advancedPanel.Children.Add(gameArgs);
+            DialogManager.RaiseDialog(XamlRoot, "高级设置", advancedPanel, true, "保存", () => AppDataController.SetGameParameter(gameArgs.Text));
+        }
+
         public void RMGameLocation(object sender, RoutedEventArgs e)
         {
             AppDataController.RMGamePath();
@@ -394,6 +404,7 @@ namespace SRTools.Views
                 selectGame.IsEnabled = true;
                 selectGame.Visibility = Visibility.Visible;
                 rmGame.Visibility = Visibility.Collapsed;
+                advancedSettings.Visibility = Visibility.Collapsed;
                 rmGame.IsEnabled = false;
                 startGame.IsEnabled = false;
                 SGFrame.Visibility = Visibility.Collapsed;
@@ -403,6 +414,7 @@ namespace SRTools.Views
                 selectGame.IsEnabled = false;
                 selectGame.Visibility = Visibility.Collapsed;
                 rmGame.Visibility = Visibility.Visible;
+                advancedSettings.Visibility = Visibility.Visible;
                 rmGame.IsEnabled = true;
                 startGame.IsEnabled = true;
                 SGFrame.Visibility = Visibility.Visible;

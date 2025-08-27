@@ -59,14 +59,10 @@
 
                         </SelectorBar>
                         
-                        
                         <Grid x:Name="NotifyLoad">
                             <ProgressRing/>
                         </Grid>
                     </Grid>
-
-
-                    
 
                 </Grid>
 
